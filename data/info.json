@@ -1,0 +1,10 @@
+{
+    "name": "InfiniteResourceDeposits",
+    "version": "0.1.0",
+    "factorio_version": "2.0",
+    "title": "Infinite Resource Deposits",
+    "author": "Daniel Vazač",
+    "description": "Keeps small infinite ore deposits inside larger ore patches. Replaces 15k resources with infinite ones.",
+    "dependencies": ["base >= 2.0", "space-age >= 2.0"]
+  }
+  

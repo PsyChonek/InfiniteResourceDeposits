@@ -1,0 +1,60 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Output files
+data/*.zip
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.temp
+
+# Archives
+*.tar
+*.zip
+*.7z
+*.gz
+*.bz2
+
+# System-generated files
+*.swp
+*.bak
+*.pid
+*.seed
+*.pid.lock
+
+# Compiled files
+*.out
+*.class
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Dependency directories
+bower_components/
+
+# Miscellaneous
+*.log
+*.bak
+*.swp
+*.lock
+
+# Ignore packed output
+*_*.zip
