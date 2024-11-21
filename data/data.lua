@@ -1,26 +1,23 @@
 log("InfiniteResourcesDeposits: Begin")
 
+
 local iron_ore = data.raw.resource["iron-ore"]
 local copper_ore = data.raw.resource["copper-ore"]
 
--- iron_ore_infinite
-local iron_ore_infinite = table.deepcopy(iron_ore)
-iron_ore_infinite.name = "infinite-" .. iron_ore.name
-iron_ore_infinite.infinite = true
-iron_ore_infinite.minimum = 100
-iron_ore_infinite.normal = 100
-iron_ore_infinite.infinite_depletion_amount = 0
-iron_ore_infinite.minable.results = {
-  {
-    type = "item",
-    name = iron_ore.minable.result,
-    amount = 1
-  }
+local infinite_resource = table.deepcopy(iron_ore)
+infinite_resource.name = "infinite-" .. iron_ore.name
+infinite_resource.infinite = true
+infinite_resource.minimum = iron_ore.minimum or 100
+infinite_resource.normal = iron_ore.normal or 100
+infinite_resource.infinite_depletion_amount = 0
+infinite_resource.minable.results = {
+    {
+        type = "item",
+        name = iron_ore.minable.result,
+        amount = 1
+    }
 }
-
-data:extend({ 
-  iron_ore_infinite 
-})
+-- data:extend({infinite_resource})
 
 -- copper_ore.autoplace.richness_expression: "(var('control:copper-ore:size') > 0) * (1*var('control:copper-ore:richness')*(var('default-copper-ore-patches'))*max((1000+distance)/2600,1))"
 -- copper_ore.autoplace.probability_expression : "(var('control:copper-ore:size') > 0) * (clamp(var('default-copper-ore-patches'), 0, 1))"
@@ -58,10 +55,27 @@ data:extend({
 -- -- "(var('control:copper-ore:size') > 0) * (clamp(var('copper-ore-patches'), 0, 1))"
 -- copper_ore.autoplace.order = "b"
 
-iron_ore.autoplace.richness_expression = 0
--- "(var('control:copper-ore:size') > 0) * (1*var('control:copper-ore:richness')*(var('copper-ore-patches'))*max((1000+distance)/2600,1))"
-iron_ore.autoplace.probability_expression = 0
--- "(var('control:copper-ore:size') > 0) * (clamp(var('copper-ore-patches'), 0, 1))"
-iron_ore.autoplace.order = "b"
+-- iron_ore.autoplace.richness_expression = 0
+-- -- "(var('control:copper-ore:size') > 0) * (1*var('control:copper-ore:richness')*(var('copper-ore-patches'))*max((1000+distance)/2600,1))"
+-- iron_ore.autoplace.probability_expression = 0
+-- -- "(var('control:copper-ore:size') > 0) * (clamp(var('copper-ore-patches'), 0, 1))"
+-- iron_ore.autoplace.order = "b"
+
+-- iron_ore.name = iron_ore.name
+-- iron_ore.infinite = true
+-- iron_ore.minimum = iron_ore.minimum or 100
+-- iron_ore.normal = iron_ore.normal or 100
+-- iron_ore.infinite_depletion_amount = 0
+-- iron_ore.minable.results = {
+--     {
+--         type = "item",
+--         name = iron_ore.minable.result,
+--         amount = 1
+--     }
+-- }
+
+iron_ore.autoplace.order = iron_ore.autoplace.order .. "-b" 
+
+
 
 log("InfiniteResourcesDeposits: End")
