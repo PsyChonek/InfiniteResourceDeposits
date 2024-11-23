@@ -1,5 +1,5 @@
 -- Add the infinite resource to the game data
-local function addResource(resource, planet, control)
+local function addResource(resource, planet, control, name)
   -- Add the resource to game data
   data:extend{resource}
 
@@ -20,7 +20,14 @@ local function addResource(resource, planet, control)
 
   -- Auto place settings
   planet.map_gen_settings.autoplace_settings["entity"].settings[resource.name] = {}
-
+  
+  -- Expression names, copy expression for infinite resources
+  if planet.map_gen_settings.property_expression_names["entity:"..name..":probability"] then
+    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":probability"] = planet.map_gen_settings.property_expression_names["entity:"..name..":probability"]
+  end
+  if planet.map_gen_settings.property_expression_names["entity:"..name..":richness"] then
+    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":richness"] = planet.map_gen_settings.property_expression_names["entity:"..name..":richness"]
+  end
 end
 
 -- Create the common resource settings
@@ -50,7 +57,7 @@ local function createCommon (resource)
 end
 
 -- Create the resource
-local function createResource(resource, planet)
+local function createResource(resource)
   createCommon(resource)
 
   local smaller_patch = ""..resource.autoplace.probability_expression.." *" ..settings.startup["infinite-resource-deposits-frequency"].value
@@ -64,7 +71,7 @@ local function createResource(resource, planet)
 end
 
 -- Create a fluid resource
-local function createFluidResource(resource, planet)
+local function createFluidResource(resource)
   createCommon(resource)
 
   local smaller_patch = ""..resource.autoplace.probability_expression.." *" ..settings.startup["infinite-resource-fluids-frequency"].value
@@ -90,13 +97,14 @@ end
 
 log("Adding infinite resources to planets")
 
+log("Resource "..serpent.block(data.raw.resource))
+
 for _, planet in pairs(data.raw.planet) do
 
   log("Processing planet: "..planet.name)
 
   local planetAutoplaceSettings = table.deepcopy(planet.map_gen_settings.autoplace_settings["entity"])
 
-  log("Expression:"..serpent.block(planet.map_gen_settings.property_expression_names))
 
   -- Loop through all planets
   for name, _ in pairs(planetAutoplaceSettings.settings) do
@@ -113,17 +121,20 @@ for _, planet in pairs(data.raw.planet) do
       log("Creating infinite resource: "..resource.name)
       if resource.infinite then
         -- Create a copy of the resource
-        resource_infinite = createFluidResource(resource, planet)
+        resource_infinite = createFluidResource(resource)
       else
         -- Create a copy of the resource
-        resource_infinite = createResource(resource, planet)
+        resource_infinite = createResource(resource)
       end
 
       log("Adding infinite resource: "..resource_infinite.name)
 
       -- Add the resource to the planet
-      addResource(resource_infinite, planet, nil)
+      addResource(resource_infinite, planet, nil, name)
     end
   end
+
+  log("Expression:"..serpent.block(planet.map_gen_settings.property_expression_names))
+
 end
 
