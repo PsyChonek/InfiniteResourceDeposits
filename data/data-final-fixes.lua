@@ -21,12 +21,27 @@ local function addResource(resource, planet, control, name)
   -- Auto place settings
   planet.map_gen_settings.autoplace_settings["entity"].settings[resource.name] = {}
   
-  -- Expression names, copy expression for infinite resources
+
+  local expression_probability_smaller
+
+  -- Create expressions for planet overrides
   if planet.map_gen_settings.property_expression_names["entity:"..name..":probability"] then
-    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":probability"] = planet.map_gen_settings.property_expression_names["entity:"..name..":probability"]
+    local expression_probability = table.deepcopy(data.raw["noise-expression"][planet.name.."_"..string.gsub(name, "-", "_").."_probability"])
+    expression_probability.name = planet.name.."_"..string.gsub(resource.name, "-", "_").."_probability"
+
+    expression_probability_smaller = "clamp("..expression_probability.expression..",0,1)".." * " ..settings.startup["infinite-resource-deposits-frequency"].value
+    expression_probability.expression = expression_probability_smaller
+
+    data:extend{expression_probability}
+    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":probability"] = expression_probability.name
   end
   if planet.map_gen_settings.property_expression_names["entity:"..name..":richness"] then
-    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":richness"] = planet.map_gen_settings.property_expression_names["entity:"..name..":richness"]
+    local expression_richness = table.deepcopy(data.raw["noise-expression"][planet.name.."_"..string.gsub(name, "-", "_").."_richness"])
+    expression_richness.name = planet.name.."_"..string.gsub(resource.name, "-", "_").."_richness"
+    expression_richness.expression = settings.startup["infinite-resource-deposits-richness"].value
+
+    data:extend{expression_richness}
+    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":richness"] = expression_richness.name
   end
 end
 
@@ -52,6 +67,7 @@ local function createCommon (resource)
   resource.normal = 100
   resource.infinite_depletion_amount = 0
   resource.map_color = {r=0, g=0, b=1}
+  resource.stages_effect = nil
 
   return resource
 end
@@ -60,12 +76,10 @@ end
 local function createResource(resource)
   createCommon(resource)
 
-  local smaller_patch = ""..resource.autoplace.probability_expression.." *" ..settings.startup["infinite-resource-deposits-frequency"].value
+  local smaller_patch = ""..resource.autoplace.probability_expression.." * " ..settings.startup["infinite-resource-deposits-frequency"].value
   resource.autoplace.richness_expression = settings.startup["infinite-resource-deposits-richness"].value
   resource.autoplace.probability_expression = smaller_patch
-  resource.autoplace.order = "a"  
-
-  resource.stages_effect = nil
+  resource.autoplace.order = "a"
 
   return resource
 end
@@ -74,12 +88,10 @@ end
 local function createFluidResource(resource)
   createCommon(resource)
 
-  local smaller_patch = ""..resource.autoplace.probability_expression.." *" ..settings.startup["infinite-resource-fluids-frequency"].value
+  local smaller_patch = ""..resource.autoplace.probability_expression.." * " ..settings.startup["infinite-resource-fluids-frequency"].value
   resource.autoplace.richness_expression = settings.startup["infinite-resource-fluids-richness"].value
   resource.autoplace.probability_expression = smaller_patch
   resource.autoplace.order = "a"
-
-  resource.stages_effect = nil
 
   return resource
 end
@@ -97,14 +109,11 @@ end
 
 log("Adding infinite resources to planets")
 
-log("Resource "..serpent.block(data.raw.resource))
-
 for _, planet in pairs(data.raw.planet) do
 
   log("Processing planet: "..planet.name)
 
   local planetAutoplaceSettings = table.deepcopy(planet.map_gen_settings.autoplace_settings["entity"])
-
 
   -- Loop through all planets
   for name, _ in pairs(planetAutoplaceSettings.settings) do
@@ -134,7 +143,8 @@ for _, planet in pairs(data.raw.planet) do
     end
   end
 
-  log("Expression:"..serpent.block(planet.map_gen_settings.property_expression_names))
+  -- log("Expression:"..serpent.block(planet.map_gen_settings.property_expression_names))
 
 end
 
+-- log("Data expressions:"..serpent.block(data.raw["noise-expression"]))
