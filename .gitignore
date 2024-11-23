@@ -58,5 +58,3 @@ bower_components/
 
 # Ignore packed output
 *_*.zip
-
-my-pack.js
