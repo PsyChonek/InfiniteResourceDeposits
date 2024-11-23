@@ -1,23 +1,43 @@
-# InfiniteResourceDeposits
+# Infinite Resource Deposits
 
 ## Description
-The InfiniteResourceDeposits Mod for Factorio allows players to continue mining a small amount of ore even after an entire ore patch has been depleted. This ensures that your mining operations can continue indefinitely, providing a steady, albeit reduced, supply of resources.
+
+My mod is replacing percentage based resource deposits with infinite ones. While game is loading all resources are duplicated and infinite variant is added to the game. This mod should be compatible with all other mods that don't change resource deposits.
 
 ## Features
-- Replace resources larger that 15k with infinite resources
 
-## Usage
-1. Start a new game or load an existing save.
-2. Mine any ore patch as usual.
-3. Once the ore patch is depleted, a small amount of infinite ore will remain, allowing you to continue mining indefinitely.
+- Infinite resource deposits
+- Compatible with all other mods that don't change resource deposits
+- No performance impact
+- Configurable settings
+- Modifying map generation
 
-**Note:** Infinite ore generation is only available in new saves created after installing the mod. In existing saves, infinite ore will only appear in newly created chunks.
+## Configuration
 
-## Compatibility
-This mod is compatible with Factorio version 2.0.0 and later. It is not compatible with any other mods that modify the resource generation system. Only supports vanilla ores.
+- Frequency of infinite resource deposits
+- Richness of infinite resource deposits
+- Frequency of infinite resource fluids
+- Richness of infinite resource fluids
+
+## Maybe in the future
+
+- Configurable starting area resources, it may be useful for example on Vulcanus.
+- Configurable infinite resource deposits per resource type
+- Configurable infinite resource fluids per fluid type
+- Different pasterns of infinite resource deposits
+
+## Changelog
+
+### 0.1.0
+
+- Initial release
+- Added infinite resource deposits
+
+### 0.2.0
+
+- Added infinite resource fluids
+- Added configuration settings
 
 ## License
-This mod is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-## Credits
-Developed by Daniel Vazac.
+This mod is licensed under the MIT License. Feel free to use it in your own projects.

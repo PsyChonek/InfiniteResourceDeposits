@@ -47,27 +47,34 @@ end
 
 -- Create the common resource settings
 local function createCommon (resource)
+  resource.localised_name = {"entity-name."..resource.name}
   resource.name = resource.name.."-infinite"
   resource.order = "a"
-  resource.stages =
-  {
-    sheet =
+  
+  -- Cookie
+  if settings.startup["cookie"].value then
+    resource.stages =
     {
-      filename = "__InfiniteResourceDeposits__/sprites/copper-ore-cookie.png",
-      priority = "extra-high",
-      width = 64,
-      height = 64,
-      frame_count = 1,
-      variation_count = 1
+      sheet =
+      {
+        filename = "__InfiniteResourceDeposits__/sprites/copper-ore-cookie.png",
+        priority = "extra-high",
+        width = 64,
+        height = 64,
+        frame_count = 1,
+        variation_count = 1,
+        scale = 0.5
+      }
     }
-  }
+    resource.map_color = {r=0, g=0, b=1}
+    resource.stages_effect = nil
+  end
+
   resource.stage_counts = {1}
   resource.infinite = true
   resource.minimum = 100
   resource.normal = 100
   resource.infinite_depletion_amount = 0
-  resource.map_color = {r=0, g=0, b=1}
-  resource.stages_effect = nil
 
   return resource
 end

@@ -1,10 +1,10 @@
 {
     "name": "InfiniteResourceDeposits",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "factorio_version": "2.0",
     "title": "Infinite Resource Deposits",
     "author": "Daniel Vazač",
-    "description": "Keeps small infinite ore deposits inside larger ore patches. Replaces 15k resources with infinite ones.",
-    "dependencies": ["base >= 2.0", "space-age >= 2.0"]
+    "description": "Makes resource deposits and fluid patches infinite. Replace % of original resource with new infinite variant. All settings are configurable. Should work with all mods.",
+    "dependencies": ["base >= 2.0"]
   }
   
