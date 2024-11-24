@@ -20,28 +20,52 @@ local function addResource(resource, planet, control, name)
 
   -- Auto place settings
   planet.map_gen_settings.autoplace_settings["entity"].settings[resource.name] = {}
-  
 
+  local expression_richness_original
   local expression_probability_smaller
 
   -- Create expressions for planet overrides
-  if planet.map_gen_settings.property_expression_names["entity:"..name..":probability"] then
-    local expression_probability = table.deepcopy(data.raw["noise-expression"][planet.name.."_"..string.gsub(name, "-", "_").."_probability"])
-    expression_probability.name = planet.name.."_"..string.gsub(resource.name, "-", "_").."_probability"
-
-    expression_probability_smaller = "clamp("..expression_probability.expression..",0,1)".." * " ..settings.startup["infinite-resource-deposits-frequency"].value
-    expression_probability.expression = expression_probability_smaller
-
-    data:extend{expression_probability}
-    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":probability"] = expression_probability.name
-  end
   if planet.map_gen_settings.property_expression_names["entity:"..name..":richness"] then
     local expression_richness = table.deepcopy(data.raw["noise-expression"][planet.name.."_"..string.gsub(name, "-", "_").."_richness"])
+
     expression_richness.name = planet.name.."_"..string.gsub(resource.name, "-", "_").."_richness"
+
+    expression_richness_original = expression_richness.expression
     expression_richness.expression = settings.startup["infinite-resource-deposits-richness"].value
 
     data:extend{expression_richness}
     planet.map_gen_settings.property_expression_names["entity:"..resource.name..":richness"] = expression_richness.name
+  end
+
+  if planet.map_gen_settings.property_expression_names["entity:"..name..":probability"] then
+    local expression_probability = table.deepcopy(data.raw["noise-expression"][planet.name.."_"..string.gsub(name, "-", "_").."_probability"])
+    expression_probability.name = planet.name.."_"..string.gsub(resource.name, "-", "_").."_probability"
+    expression_probability_smaller = "clamp("..expression_probability.expression..",0,1)".." * " ..settings.startup["infinite-resource-deposits-frequency"].value
+
+    if expression_richness_original.expression
+    then
+
+      expression_probability.expression = "min("..expression_probability_smaller..", "..expression_richness_original.."-"..settings.startup["infinite-resource-deposits-minimal-amount"].value..")"
+      
+      -- expression_richness.local_expressions add to expression_probability.local_expressions
+      if expression_richness_original.local_expressions then
+        for name, local_expression in pairs(expression_richness_original.local_expressions) do
+          if not expression_probability.local_expressions then
+            expression_probability.local_expressions = {}
+          end
+          if local_expression then
+            expression_probability.local_expressions[name] = local_expression
+          end
+        end
+      end
+    else
+      expression_probability.expression = expression_probability_smaller
+    end
+
+    -- log("Adding expression: "..serpent.block(expression_probability))
+
+    data:extend{expression_probability}
+    planet.map_gen_settings.property_expression_names["entity:"..resource.name..":probability"] = expression_probability.name
   end
 end
 
@@ -50,7 +74,11 @@ local function createCommon (resource)
   resource.localised_name = {"entity-name."..resource.name}
   resource.name = resource.name.."-infinite"
   resource.order = "a"
-  
+  resource.infinite = true
+  resource.minimum = 100
+  resource.normal = 100
+  resource.infinite_depletion_amount = 0
+
   -- Cookie
   if settings.startup["cookie"].value then
     resource.stages =
@@ -71,10 +99,6 @@ local function createCommon (resource)
   end
 
   resource.stage_counts = {1}
-  resource.infinite = true
-  resource.minimum = 100
-  resource.normal = 100
-  resource.infinite_depletion_amount = 0
 
   return resource
 end
@@ -83,9 +107,13 @@ end
 local function createResource(resource)
   createCommon(resource)
 
-  local smaller_patch = ""..resource.autoplace.probability_expression.." * " ..settings.startup["infinite-resource-deposits-frequency"].value
-  resource.autoplace.richness_expression = settings.startup["infinite-resource-deposits-richness"].value
-  resource.autoplace.probability_expression = smaller_patch
+  local original_richness = resource.autoplace.richness_expression
+
+  if original_richness then
+    local smaller_patch = ""..resource.autoplace.probability_expression.." * " ..settings.startup["infinite-resource-deposits-frequency"].value
+    resource.autoplace.richness_expression = settings.startup["infinite-resource-deposits-richness"].value
+    resource.autoplace.probability_expression = "min("..smaller_patch..", ("..original_richness..")-"..settings.startup["infinite-resource-deposits-minimal-amount"].value..")"
+  end
   resource.autoplace.order = "a"
 
   return resource
@@ -136,11 +164,17 @@ for _, planet in pairs(data.raw.planet) do
 
       log("Creating infinite resource: "..resource.name)
       if resource.infinite then
-        -- Create a copy of the resource
+        if settings.startup["infinite-resource-fluids"].value then
         resource_infinite = createFluidResource(resource)
-      else
-        -- Create a copy of the resource
-        resource_infinite = createResource(resource)
+        else
+          resource_infinite = resource
+        end
+      else      
+        if settings.startup["infinite-resource-deposits"].value then
+          resource_infinite = createResource(resource)
+        else
+          resource_infinite = resource
+        end
       end
 
       log("Adding infinite resource: "..resource_infinite.name)
