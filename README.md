@@ -11,6 +11,7 @@ My mod is replacing percentage based resource deposits with infinite ones. While
 - No performance impact
 - Configurable settings
 - Modifying map generation
+- Limit where infinite resources can be placed (allow only further from spawn)
 
 ## Configuration
 
@@ -18,13 +19,14 @@ My mod is replacing percentage based resource deposits with infinite ones. While
 - Richness of infinite resource deposits
 - Frequency of infinite resource fluids
 - Richness of infinite resource fluids
+- Limit where infinite resources can be placed minimum amount resources to be able to place infinite resource
 
 ## Maybe in the future
 
 - Configurable starting area resources, it may be useful for example on Vulcanus.
 - Configurable infinite resource deposits per resource type
 - Configurable infinite resource fluids per fluid type
-- Different pasterns of infinite resource deposits
+- Different patterns of infinite resource deposits
 
 ## Changelog
 
@@ -37,6 +39,11 @@ My mod is replacing percentage based resource deposits with infinite ones. While
 
 - Added infinite resource fluids
 - Added configuration settings
+
+### 0.3.0
+
+- Added limit where infinite resources can be placed
+- New configuration settings
 
 ## License
 
