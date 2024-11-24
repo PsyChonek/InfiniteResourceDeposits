@@ -1,0 +1,36 @@
+{
+    "entity": [
+        [
+            "infinite-iron-ore",
+            "iron-ore-infinite"
+        ],
+        [
+            "infinite-copper-ore",
+            "copper-ore-infinite"
+        ],
+        [
+            "infinite-coal",
+            "coal-infinite"
+        ],
+        [
+            "infinite-stone",
+            "stone-infinite"
+        ],
+        [
+            "infinite-uranium-ore",
+            "uranium-ore-infinite"
+        ],
+        [
+            "infinite-calcite",
+            "calcite-infinite"
+        ],
+        [
+            "infinite-scrap",
+            "scrap-infinite"
+        ],
+        [
+            "infinite-tungsten-ore",
+            "tungsten-ore-infinite"
+        ]
+    ]
+}
