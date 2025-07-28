@@ -48,3 +48,11 @@ My mod is replacing percentage based resource deposits with infinite ones. While
 ## License
 
 This mod is licensed under the MIT License. Feel free to use it in your own projects.
+
+## Support
+
+Create a Pull Request <3
+
+or
+
+<a href="https://www.buymeacoffee.com/psychonek" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
