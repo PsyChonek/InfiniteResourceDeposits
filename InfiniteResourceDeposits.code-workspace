@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"justarandomgeek.factoriomod-debug", // Factorio Modding Tool Kit (debugger)
+			"svizzini.factorio-lua-api-autocomplete", // Factorio Lua API autocomplete
+			"sumneko.lua", // Lua Language Server for better Lua support
+			"slevesque.vscode-hexdump" // Useful for binary/hex editing (e.g., images)
+		]
+	},
+	"settings": {
+		"lua.runtime.version": "Lua 5.2",
+		"lua.diagnostics.globals": ["script", "game", "defines", "remote", "settings", "commands", "global"],
+		"files.associations": {
+			"*.lua": "lua"
+		}
+	}
+}
